@@ -39,8 +39,8 @@ impl<I> SamplesRateConverter<I>
     /// Panicks if `from` or `to` are equal to 0.
     ///
     #[inline]
-    pub fn new(mut input: I, from: cpal::SamplesRate, to: cpal::SamplesRate,
-               num_channels: cpal::ChannelsCount)
+    pub fn new(mut input: I, from: cpal::SampleRate, to: cpal::SampleRate,
+               num_channels: cpal::ChannelCount)
                -> SamplesRateConverter<I> {
         let from = from.0;
         let to = to.0;

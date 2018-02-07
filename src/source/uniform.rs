@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use cpal;
 
-use conversions::ChannelsCountConverter;
+use conversions::ChannelCountConverter;
 use conversions::DataConverter;
 use conversions::SamplesRateConverter;
 
@@ -21,7 +21,7 @@ pub struct UniformSourceIterator<I, D>
           I::Item: Sample,
           D: Sample
 {
-    inner: Option<DataConverter<ChannelsCountConverter<SamplesRateConverter<Take<I>>>, D>>,
+    inner: Option<DataConverter<ChannelCountConverter<SamplesRateConverter<Take<I>>>, D>>,
     target_channels: u16,
     target_samples_rate: u32,
     total_duration: Option<Duration>,
@@ -48,7 +48,7 @@ impl<I, D> UniformSourceIterator<I, D>
 
     #[inline]
     fn bootstrap(input: I, target_channels: u16, target_samples_rate: u32)
-                 -> DataConverter<ChannelsCountConverter<SamplesRateConverter<Take<I>>>, D> {
+                 -> DataConverter<ChannelCountConverter<SamplesRateConverter<Take<I>>>, D> {
         let frame_len = input.current_frame_len();
 
         let from_channels = input.channels();
@@ -59,10 +59,10 @@ impl<I, D> UniformSourceIterator<I, D>
             n: frame_len,
         };
         let input = SamplesRateConverter::new(input,
-                                              cpal::SamplesRate(from_samples_rate),
-                                              cpal::SamplesRate(target_samples_rate),
+                                              cpal::SampleRate(from_samples_rate),
+                                              cpal::SampleRate(target_samples_rate),
                                               from_channels);
-        let input = ChannelsCountConverter::new(input, from_channels, target_channels);
+        let input = ChannelCountConverter::new(input, from_channels, target_channels);
         let input = DataConverter::new(input);
 
         input
